@@ -1,0 +1,4 @@
+requests
+openai
+pydantic_core
+fastapi==0.99.1
