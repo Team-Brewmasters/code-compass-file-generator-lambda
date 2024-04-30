@@ -62,7 +62,7 @@ class FileGenerator:
         try:
             diagram_code = create_architecture_diagram(file_contents)
             file_name = self.__extract_file_name_git_url(github_url, "diagram.png")
-            return get_sequence_diagram(file_contents, file_name)
+            return get_sequence_diagram(diagram_code, file_name)
         except Exception as e:
             raise Exception(f"Failed to generate architecture diagram: {e}")
         
