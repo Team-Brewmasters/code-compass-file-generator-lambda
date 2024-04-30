@@ -31,12 +31,12 @@ jobs:
         pip install -r requirements.txt -t .
 
     - name: Create deployment package
-      run: zip -r code-compass-ask-question-lambda.zip .
+      run: zip -r code-compass-file-generation-lambda.zip .
 
     - name: Push Zip to S3
       uses: jakejarvis/s3-sync-action@v0.3.1
       with:
-        args: --exclude '*' --include 'code-compass-ask-question-lambda.zip'
+        args: --exclude '*' --include 'code-compass-file-generation-lambda.zip'
       env:
         AWS_REGION: 'us-east-1'
         AWS_S3_BUCKET: 'code-compass-lambdas'
@@ -44,4 +44,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Deploy to lambda
-      run: aws lambda update-function-code --function-name code-compass-ask-question-lambda --region us-east-1 --s3-bucket code-compass-lambdas --s3-key code-compass-ask-question-lambda.zip
+      run: aws lambda update-function-code --function-name code-compass-file-generation-lambda --region us-east-1 --s3-bucket code-compass-lambdas --s3-key code-compass-file-generation-lambda.zip

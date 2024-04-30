@@ -1,14 +1,12 @@
+import os
+
 from openai import OpenAI
 
 # Set up your OpenAI API credentials
-api_key = "sk-proj-RRkKlGDUEXpvF6EyyWyRT3BlbkFJJCovL0rU94pzUcogHxlg"
 
 def call_chatgpt(prompt, files):
-    
+    api_key = os.environ.get('OPENAI_API_KEY')
     client = OpenAI(api_key=api_key)
-
-    # client.api_key = api_key
-
 
     # Call the OpenAI ChatGPT API
     response = client.chat.completions.create(
