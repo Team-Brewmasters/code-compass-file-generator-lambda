@@ -9,12 +9,12 @@ def lambda_handler(event, context):
         github_url = event['queryStringParameters']['githubURL']
         file_type = event['queryStringParameters']['fileType']
         file_content = get_repo_file_contents(github_url)
-
+        print('Retrieved file content from GitHub API. Generating file...')
         file_generator = FileGenerator()
 
         pre_signed_url = file_generator.generate_file(github_url, file_type, file_content)
+        print('File generated successfully.')
 
-        
         return {
             'statusCode': 200,
             'headers': {
@@ -27,6 +27,7 @@ def lambda_handler(event, context):
             })
         }
     except Exception as e:
+        print(e)
         return {
             'statusCode': 500,
             'body': str(e),
