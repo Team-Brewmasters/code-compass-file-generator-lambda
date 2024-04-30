@@ -10,8 +10,10 @@ def get_sequence_diagram(text, file_name, style='default'):
     
     s3_service = S3Service()
 
+    background_color = "#333333"
+    text_color = "#FFFFFF"
     request = {
-        "message": text,
+        "message": f'{{background:{background_color}}}\n{{participant-color:{text_color}}}\n{{arrow-color:{text_color}}}\n{text}',
         "style": style,
         "apiVersion": "1"
     }
