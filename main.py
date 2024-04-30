@@ -1,17 +1,19 @@
 import json
 
+from file_generation_service import FileGenerator
 from github_api_service import get_repo_file_contents
-from open_ai_service import call_chatgpt
 
 
 def lambda_handler(event, context):
     try:
         github_url = event['queryStringParameters']['githubURL']
-        question = event['queryStringParameters']['question']
-
+        file_type = event['queryStringParameters']['fileType']
         file_content = get_repo_file_contents(github_url)
 
-        open_ai_response = call_chatgpt(question, file_content)
+        file_generator = FileGenerator()
+
+        pre_signed_url = file_generator.generate_file(github_url, file_type, file_content)
+
         
         return {
             'statusCode': 200,
@@ -20,7 +22,9 @@ def lambda_handler(event, context):
                     'Access-Control-Allow-Methods': '*',
                     'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
                 },
-            'body': json.dumps(open_ai_response)
+            'body': json.dumps({
+                'preSignedUrl': pre_signed_url,
+            })
         }
     except Exception as e:
         return {
@@ -33,8 +37,11 @@ def lambda_handler(event, context):
                 },
         }
     
-# event = {
-#     "githubURL": "https://www.github.com/Team-Brewmasters/code-compass-summary-lambda"
-# }
+event = {
+    "queryStringParameters": {
+    "githubURL": "https://github.com/Team-Brewmasters/code-compass-summary-lambda",
+    "fileType": "swagger"
+    }
+}
 
-# lambda_handler(event, None)
+lambda_handler(event, None)
