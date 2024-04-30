@@ -73,8 +73,8 @@ def create_architecture_diagram(files):
     response = client.chat.completions.create(
         model="gpt-4-turbo",
         messages=[
-            {'role': 'system', 'content': 'You are a master programming engineer and businessman that generates CSV files describing the business rules for GitHub repositories. You do not need to explain why it may not be fully accurate'},
-            {'role': 'user', 'content': f'Please generate a CSV file for the following repository contents:\n\n{files}\n\nReturn the generated CSV file content only. Do not provide context or explanations.'}
+            {'role': 'system', 'content': 'You are a master programming engineer and businessman that generates architecture diagrams describing the architecture of an app or service. You do not need to explain why it may not be fully accurate'},
+            {'role': 'user', 'content': f'Please generate an architecture diagram using https://www.websequencediagrams.com/ language for the following repository contents:\n\n{files}\n\nReturn the generated architecture diagram code only. Do not provide context or explanations.'}
         ]
     )
 

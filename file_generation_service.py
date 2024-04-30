@@ -3,7 +3,8 @@ import json
 import boto3
 import yaml
 
-from open_ai_service import create_swagger_yaml
+from architecture_diagram import get_sequence_diagram
+from open_ai_service import create_architecture_diagram, create_swagger_yaml
 from s3_service import S3Service
 
 
@@ -19,6 +20,8 @@ class FileGenerator:
                 return self.generate_swagger(github_url, file_contents)
             case "readme":
                 return self.generate_read_me(github_url, file_contents)
+            case "architecture":
+                return self.generate_architecture_diagram(github_url, file_contents)
             case _:
                 print(f"Unsupported file type: {file_type}")
             
@@ -47,13 +50,21 @@ class FileGenerator:
             if cleaned_yaml is None:
                 raise Exception("Failed to clean Swagger YAML content")
             print("Cleaned Swagger YAML content")
-            self.s3_service.upload_file_to_s3("file-genertions", self.__extract_file_name_git_url(github_url, "swagger"), cleaned_yaml)
+            self.s3_service.upload_file_to_s3("", self.__extract_file_name_git_url(github_url, "swagger"), cleaned_yaml)
 
             print("Uploaded Swagger YAML file to S3")
 
-            return self.s3_service.generate_presigned_url("file-genertions", self.__extract_file_name_git_url(github_url, "swagger"))
+            return self.s3_service.generate_presigned_url("", self.__extract_file_name_git_url(github_url, "swagger"))
         except Exception as e:
             raise Exception(f"Failed to generate Swagger YAML file: {e}")
+        
+    def generate_architecture_diagram(self, github_url, file_contents):
+        try:
+            diagram_code = create_architecture_diagram(file_contents)
+            file_name = self.__extract_file_name_git_url(github_url, "png")
+            return get_sequence_diagram(file_contents, file_name)
+        except Exception as e:
+            raise Exception(f"Failed to generate architecture diagram: {e}")
         
     def __extract_file_name_git_url(self, github_url, file_type):
         return github_url.split("/")[-1] + "-" + f"{file_type}"
