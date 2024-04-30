@@ -50,18 +50,18 @@ class FileGenerator:
             if cleaned_yaml is None:
                 raise Exception("Failed to clean Swagger YAML content")
             print("Cleaned Swagger YAML content")
-            self.s3_service.upload_file_to_s3("", self.__extract_file_name_git_url(github_url, "swagger"), cleaned_yaml)
+            self.s3_service.upload_file_to_s3("", self.__extract_file_name_git_url(github_url, "swagger.yaml"), cleaned_yaml)
 
             print("Uploaded Swagger YAML file to S3")
 
-            return self.s3_service.generate_presigned_url("", self.__extract_file_name_git_url(github_url, "swagger"))
+            return self.s3_service.generate_presigned_url("", self.__extract_file_name_git_url(github_url, "swagger.yaml"))
         except Exception as e:
             raise Exception(f"Failed to generate Swagger YAML file: {e}")
         
     def generate_architecture_diagram(self, github_url, file_contents):
         try:
             diagram_code = create_architecture_diagram(file_contents)
-            file_name = self.__extract_file_name_git_url(github_url, "png")
+            file_name = self.__extract_file_name_git_url(github_url, "diagram.png")
             return get_sequence_diagram(file_contents, file_name)
         except Exception as e:
             raise Exception(f"Failed to generate architecture diagram: {e}")
