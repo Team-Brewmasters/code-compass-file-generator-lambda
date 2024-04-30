@@ -51,7 +51,7 @@ class FileGenerator:
             self.s3_service.upload_file_to_s3("file-genertions", self.__extract_file_name_git_url(github_url, "swagger"), cleaned_yaml)
 
             print("Uploaded Swagger YAML file to S3")
-            
+
             return self.s3_service.generate_presigned_url("file-genertions", self.__extract_file_name_git_url(github_url, "swagger"))
         except Exception as e:
             raise Exception(f"Failed to generate Swagger YAML file: {e}")
@@ -59,7 +59,7 @@ class FileGenerator:
     def __extract_file_name_git_url(self, github_url, file_type):
         return github_url.split("/")[-1] + "-" + f"{file_type}"
 
-    def validate_and_correct_yaml(yaml_content):
+    def validate_and_correct_yaml(self, yaml_content):
         print("Validating and correcting YAML content...")
 
         try:
