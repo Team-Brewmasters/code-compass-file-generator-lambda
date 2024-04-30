@@ -41,13 +41,12 @@ class FileGenerator:
         try:
             swagger_yaml_contents = create_swagger_yaml(file_contents)
             print("Generated Swagger YAML content")
-
+            print(swagger_yaml_contents)
             cleaned_yaml = self.validate_and_correct_yaml(swagger_yaml_contents)
-            print("Cleaned Swagger YAML content")
 
             if cleaned_yaml is None:
                 raise Exception("Failed to clean Swagger YAML content")
-            
+            print("Cleaned Swagger YAML content")
             self.s3_service.upload_file_to_s3("file-genertions", self.__extract_file_name_git_url(github_url, "swagger"), cleaned_yaml)
 
             print("Uploaded Swagger YAML file to S3")
