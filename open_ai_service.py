@@ -84,5 +84,23 @@ def create_architecture_diagram(files):
 
     return generated_response
 
+def create_readme_file(files):
+    api_key = os.environ.get('OPENAI_API_KEY')
+    client = OpenAI(api_key=api_key)
+
+    # Call the OpenAI ChatGPT API
+    response = client.chat.completions.create(
+        model="gpt-4-turbo",
+        messages=[
+            {'role': 'system', 'content': 'You are a master programming engineer and businessman that generates README files for a program\'s repository. You do not need to explain why it may not be fully accurate'},
+            {'role': 'user', 'content': f'Please generate a README file for the following repository contents:\n\n{files}\n\nReturn the readme markdown only. Do not provide context or explanations.'}
+        ]
+    )
+ 
+    # Extract the generated response from the API response
+    generated_response = response.choices[0].message.content
+
+    return generated_response
+
 # create_swagger_yaml(['file1', 'file2'])
  

@@ -4,7 +4,9 @@ import boto3
 import yaml
 
 from architecture_diagram import get_sequence_diagram
-from open_ai_service import create_architecture_diagram, create_swagger_yaml
+from open_ai_service import (create_architecture_diagram,
+                             create_business_rules_csv, create_readme_file,
+                             create_swagger_yaml)
 from s3_service import S3Service
 
 
@@ -22,6 +24,8 @@ class FileGenerator:
                 return self.generate_read_me(github_url, file_contents)
             case "architecture":
                 return self.generate_architecture_diagram(github_url, file_contents)
+            case "business_rules":
+                return self.generate_business_rules_csv(github_url, file_contents)
             case _:
                 print(f"Unsupported file type: {file_type}")
             
@@ -35,10 +39,15 @@ class FileGenerator:
  
 
     def generate_read_me(self, github_url, file_contents):
-
-
-        return ''
-        pass
+        try:
+            readme_file = create_readme_file(file_contents)
+            print("Generated Readme file content")
+            print(readme_file)
+            self.s3_service.upload_file_to_s3("", self.__extract_file_name_git_url(github_url, "readme.md"), readme_file)
+            print("Uploaded Readme file to S3")
+            return self.s3_service.generate_presigned_url("", self.__extract_file_name_git_url(github_url, "readme.md"))
+        except Exception as e:
+            raise Exception(f"Failed to generate Readme file: {e}")
 
     def generate_swagger(self, github_url, file_contents):
         try:
@@ -65,6 +74,17 @@ class FileGenerator:
             return get_sequence_diagram(diagram_code, file_name)
         except Exception as e:
             raise Exception(f"Failed to generate architecture diagram: {e}")
+    
+    def generate_business_rules_csv(self, github_url, file_contents):
+        try:
+            business_rules_csv = create_business_rules_csv(file_contents)
+            print("Generated Business Rules CSV content")
+            print(business_rules_csv)
+            self.s3_service.upload_file_to_s3("", self.__extract_file_name_git_url(github_url, "business_rules.csv"), business_rules_csv)
+            print("Uploaded Business Rules CSV file to S3")
+            return self.s3_service.generate_presigned_url("", self.__extract_file_name_git_url(github_url, "business_rules.csv"))
+        except Exception as e:
+            raise Exception(f"Failed to generate Business Rules CSV file: {e}")
         
     def __extract_file_name_git_url(self, github_url, file_type):
         return github_url.split("/")[-1] + "-" + f"{file_type}"
