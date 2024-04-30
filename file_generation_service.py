@@ -67,7 +67,9 @@ class FileGenerator:
             yaml_content = yaml_content.replace("\\t", "  ")  # Replace \t with two spaces for indentation
             yaml_content = yaml_content.replace("\\'", "'")  # Replace \' with single quote
             yaml_content = yaml_content.replace('yaml\n','')
-
+            
+            yaml_content = yaml_content.replace('```','')
+            
             # Load the YAML content
             data = yaml.safe_load(yaml_content)
 

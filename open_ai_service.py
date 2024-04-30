@@ -46,5 +46,43 @@ def create_swagger_yaml(files):
 
     return generated_response
 
+def create_business_rules_csv(files):
+    api_key = os.environ.get('OPENAI_API_KEY')
+    client = OpenAI(api_key=api_key)
+
+    # Call the OpenAI ChatGPT API
+    response = client.chat.completions.create(
+        model="gpt-4-turbo",
+        messages=[
+            {'role': 'system', 'content': 'You are a master programming engineer and businessman that generates CSV files describing the business rules for GitHub repositories. You do not need to explain why it may not be fully accurate'},
+            {'role': 'user', 'content': f'Please generate a CSV file for the following repository contents:\n\n{files}\n\nReturn the generated CSV file content only. Do not provide context or explanations.'}
+        ]
+    )
+
+ 
+    # Extract the generated response from the API response
+    generated_response = response.choices[0].message.content
+
+    return generated_response
+
+def create_architecture_diagram(files):
+    api_key = os.environ.get('OPENAI_API_KEY')
+    client = OpenAI(api_key=api_key)
+
+    # Call the OpenAI ChatGPT API
+    response = client.chat.completions.create(
+        model="gpt-4-turbo",
+        messages=[
+            {'role': 'system', 'content': 'You are a master programming engineer and businessman that generates CSV files describing the business rules for GitHub repositories. You do not need to explain why it may not be fully accurate'},
+            {'role': 'user', 'content': f'Please generate a CSV file for the following repository contents:\n\n{files}\n\nReturn the generated CSV file content only. Do not provide context or explanations.'}
+        ]
+    )
+
+ 
+    # Extract the generated response from the API response
+    generated_response = response.choices[0].message.content
+
+    return generated_response
+
 # create_swagger_yaml(['file1', 'file2'])
  
