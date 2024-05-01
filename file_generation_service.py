@@ -111,4 +111,23 @@ class FileGenerator:
         except yaml.YAMLError as exc:
             print("Error in YAML formatting: ", exc)
             return None
+        
+    def retrieve_cached_file(self, github_url, file_type):
+        file_name = ""
+        match file_type:
+            case "swagger":
+                file_name = self.__extract_file_name_git_url(github_url, "swagger.yaml")
+            case "readme":
+                file_name = self.__extract_file_name_git_url(github_url, "readme.md")
+            case "architecture":
+                file_name = self.__extract_file_name_git_url(github_url, "diagram.png")
+            case "business_rules":
+                file_name = self.__extract_file_name_git_url(github_url, "business_rules.csv")
+            case _:
+                print(f"Unsupported file type: {file_type}")
+                raise Exception(f"Unsupported file type: {file_type}")
+
+        if self.s3_service.does_file_exist("", file_name):
+            return self.s3_service.generate_presigned_url("", file_name)
+        return None
                     
