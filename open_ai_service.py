@@ -35,8 +35,8 @@ def create_swagger_yaml(files):
     response = client.chat.completions.create(
         model="gpt-4-turbo",
         messages=[
-            {'role': 'system', 'content': 'You are a master programming engineer assistant that generates Swagger files for GitHub repositories. You do not need to explain why it may not be fully accurate'},
-            {'role': 'user', 'content': f'Please generate a Swagger YAML file for the following repository contents:\n\n{files}\n\nReturn the generated Swagger file content only. Do not provide context or explanations.'}
+            {'role': 'system', 'content': 'You are a master programming engineer assistant that generates OpenAPI 3.x Swagger files for GitHub repositories. You do not need to explain why it may not be fully accurate'},
+            {'role': 'user', 'content': f'Please generate a OpenAPI 3.x Swagger YAML file for the following repository contents:\n\n{files}\n\nReturn the generated OpenAPI 3.x Swagger file content only. Do not provide context or explanations.'}
         ]
     )
 
